@@ -51,7 +51,7 @@ class contact {
         this.company=company;
     }   
     public void setSalary(int salary) {
-        //this.salary=salary;
+        this.salary=salary;
     }
 }
 
