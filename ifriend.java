@@ -1,9 +1,6 @@
 import java.util.*;
 import java.time.LocalDate;
 
-/**
- * list
- */
 class list {
     private Node start;
 
@@ -117,6 +114,7 @@ class list {
     }
 
     //////////////////////////////
+    // ------sorting and swap
     ///////////////////////////////
     private void swap(Node n) {
         contact temp = n.Contact;
@@ -189,6 +187,7 @@ class list {
         listAll();
     }
     //////////////////////////////
+    // ----innerclass
     /////////////////////////////
 
     class Node {
@@ -278,11 +277,7 @@ class contact {
 class ifriend {
 
     ////////// global
-    // public static contact[] contactArray=new contact[0];
-    // public static ContactList contactList = new ContactList(100, 50);
     public static list contactList = new list();
-
-    ////////////////////////////
 
     public final static void clearConsole() {
         try {
@@ -464,9 +459,7 @@ class ifriend {
         String tempBirthday = generateBirthday();
 
         contact temp = new contact(tempid, tempname, tempMobile, tempCompany, tempSalary, tempBirthday);
-        // contactArray=add(temp);
         contactList.add(temp);
-
         System.out.println("\n\tContact has been added successfully...\n");
         System.out.print("Do you want to add another contact (Y/N):");
         char choice = input.next().charAt(0);
@@ -648,11 +641,7 @@ class ifriend {
                 if (choice == 'Y' || choice == 'y') {
                     contactList.remove(index);
                     System.out.println("\n\tContact has beed deleted succesfully...");
-                } /*
-                   * else{
-                   * body();
-                   * }
-                   */
+                }
             }
             {
                 System.out.print("\n\nDo you want to delete another contact (Y/N): ");
@@ -811,7 +800,6 @@ class ifriend {
                 break;
             case 5:
                 listContact();
-                // contactList.listAll();
                 break;
             case 6:
                 return;
