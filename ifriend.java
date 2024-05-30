@@ -1,6 +1,220 @@
 import java.util.*;
 import java.time.LocalDate;
 
+/**
+ * list
+ */
+class list {
+    private Node start;
+
+    public int search(String nameOrPhone) {
+        int index = 0;
+        Node temp = start;
+        while (temp != null) {
+            if (temp.Contact.getName().equals(nameOrPhone)
+                    || temp.Contact.getMobile().equals(nameOrPhone)) {
+                return index;
+            }
+            index++;
+            temp = temp.next;
+        }
+        return -1;
+    }
+
+    public void remove(int index) {
+        if (index == 0) {
+            start = start.next;
+        } else {
+            int count = 0;
+            Node temp = start;
+            while (count < index - 1) {
+                count++;
+                temp = temp.next;
+            }
+            temp.next = temp.next.next;
+        }
+    }
+
+    public void add(contact data) {
+        Node n1 = new Node(data);
+        if (start == null) {
+            start = n1;
+        } else {
+            Node lastNode = start;
+            while (lastNode.next != null) {
+                lastNode = lastNode.next;
+            }
+            lastNode.next = n1;
+        }
+    }
+
+    private boolean isEmpty() {
+        return start == null;
+    }
+
+    private int size() {
+        int count = 0;
+        Node temp = start;
+        while (temp != null) {
+            count++;
+            temp = temp.next;
+        }
+        return count;
+    }
+
+    private contact get(int index) {
+        Node temp = start;
+        int count = 0;
+        while (count < index) {
+            count++;
+            temp = temp.next;
+        }
+        return temp.Contact;
+    }
+
+    // ------------------UPDATE NAME------------------------
+    public void updateName(int index, String name) {
+        get(index).setName(name);
+    }
+
+    // ------------------UPDATE MOBILE------------------------
+    public void updateMobile(int index, String mobile) {
+        get(index).setMobile(mobile);
+    }
+
+    // ------------------UPDATE COMPANY------------------------
+    public void updateCompany(int index, String company) {
+        get(index).setCompany(company);
+        ;
+    }
+
+    // ------------------UPDATE SALARY------------------------
+    public void updateSalary(int index, int salary) {
+        get(index).setSalary(index);
+    }
+
+    public void about(int index) {
+        System.out.println("\tContact ID            :" + get(index).getId());
+        System.out.println("\tName                  :" + get(index).getName());
+        System.out.println("\tPhone Number          :" + get(index).getMobile());
+        System.out.println("\tCompany Name          :" + get(index).getCompany());
+        System.out.println("\tSalary                :" + get(index).getSalary());
+        System.out.println("\tB'Day(YYYY-MM-DD)     :" + get(index).getBirthday() + "\n");
+    }
+
+    public void listAll() {
+        System.out.println(
+                "+-----------------------------------------------------------------------------------------------+");
+        System.out.println("| Contact ID\t| Name\t\t|Phone Number\t| Company\t| Salary\t| Birthday\t|");
+        System.out.println(
+                "+-----------------------------------------------------------------------------------------------+");
+        for (int i = 0; i < size(); i++) {
+            System.out.printf("| %-14s| %-14s| %-14s| %-14s| %-14d| %-14s|\n", get(i).getId(), get(i).getName(),
+                    get(i).getMobile(), get(i).getCompany(), get(i).getSalary(), get(i).getBirthday());
+        }
+        System.out.println(
+                "+-----------------------------------------------------------------------------------------------+");
+    }
+
+    //////////////////////////////
+    ///////////////////////////////
+    private void swap(Node n) {
+        contact temp = n.Contact;
+        n.Contact = n.next.Contact;
+        n.next.Contact = temp;
+    }
+
+    public void sortSalary() {
+        for (int i = size(); i > 1; i--) {
+            Node temp = start;
+            boolean sorted = true;
+            for (int j = 0; j < i - 1; j++) {
+                if (temp.Contact.getSalary() > temp.next.Contact.getSalary()) {
+                    sorted = false;
+                    swap(temp);
+                }
+                temp = temp.next;
+            }
+            if (sorted) {
+                break;
+            }
+        }
+        listAll();
+    }
+
+    public void sortBirthday() {
+        for (int i = size(); i > 1; i--) {
+            Node temp = start;
+            boolean sorted = true;
+            for (int j = 0; j < i - 1; j++) {
+
+                String temp1 = temp.Contact.getBirthday().substring(0, 4)
+                        + temp.Contact.getBirthday().substring(5, 7)
+                        + temp.Contact.getBirthday().substring(8, 10);
+                int x1 = Integer.parseInt(temp1);
+                String temp2 = temp.next.Contact.getBirthday().substring(0, 4)
+                        + temp.next.Contact.getBirthday().substring(5, 7)
+                        + temp.next.Contact.getBirthday().substring(8, 10);
+                int x2 = Integer.parseInt(temp2);
+                if (x1 > x2) {
+                    sorted = false;
+                    swap(temp);
+                }
+                temp = temp.next;
+            }
+            if (sorted) {
+                break;
+            }
+        }
+        listAll();
+    }
+
+    public void sortName() {
+        for (int i = size(); i > 1; i--) {
+            Node temp = start;
+            boolean sorted = true;
+            for (int j = 0; j < i - 1; j++) {
+                String name1 = temp.Contact.getName().toLowerCase();
+                String name2 = temp.next.Contact.getName().toLowerCase();
+                if (name1.compareTo(name2) > 0) {
+                    sorted = false;
+                    swap(temp);
+                }
+                temp = temp.next;
+            }
+            if (sorted) {
+                break;
+            }
+        }
+        listAll();
+    }
+    //////////////////////////////
+    /////////////////////////////
+
+    class Node {
+        private contact Contact;
+        private Node next;
+
+        public Node(contact data) {
+            this.Contact = data;
+        }
+    }
+
+    public String generateID() {
+        Node temp = start;
+        int lastNo = 0;
+        while (temp != null) {
+            String lastId = temp.Contact.getId();
+            int x = Integer.parseInt(lastId.substring(1));
+            if (lastNo <= x) {
+                lastNo = x;
+            }
+            temp = temp.next;
+        }
+        return String.format("C%04d", lastNo + 1);
+    }
+}
+
 class contact {
     private String id;
     private String name;
@@ -61,195 +275,12 @@ class contact {
     }
 }
 
-class ContactList {
-    private contact[] contactsArray;
-    private contact[] newcontactArray;
-    private int nextIndex;
-    private int size;
-    private int loadFact;
-
-    ContactList(int size, int loadFact) {
-        contactsArray = new contact[size];
-        this.size = size;
-        this.loadFact = loadFact;
-        nextIndex = 0;
-    }
-
-    private boolean isFull() {
-        return nextIndex >= size;
-    }
-
-    // --------------------SEARCH METHOD--------------------------
-    public int searchByNameOrPhoneNumber(String nameOrPhone) {
-        for (int i = 0; i < nextIndex; i++) {
-            if (contactsArray[i].getName().equals(nameOrPhone)
-                    || contactsArray[i].getMobile().equals(nameOrPhone)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    private contact[] tempArray() {
-        contact[] tempContactArray = new contact[size];
-        for (int i = 0; i < nextIndex; i++) {
-            tempContactArray[i] = contactsArray[i];
-        }
-        contactsArray = tempContactArray;
-        return tempContactArray;
-    }
-
-    public int getSize() {
-        return nextIndex;
-    }
-
-    public contact get(int index) {
-        return contactsArray[index];
-    }
-
-    public void delete(int index) {
-        for (int i = index; i < nextIndex; i++) {
-            contactsArray[i] = contactsArray[i + 1];
-        }
-        nextIndex--;
-    }
-
-    public void sortSalary() {
-        newcontactArray = tempArray();
-        for (int i = nextIndex - 1; i > 0; i--) {
-            boolean sorted = true;
-            for (int j = 0; j < i; j++) {
-                if (newcontactArray[j].getSalary() > newcontactArray[j + 1].getSalary()) {
-                    sorted = false;
-                    swap(newcontactArray, j, j + 1);
-                }
-            }
-            if (sorted) {
-                break;
-            }
-        }
-        listAll(newcontactArray);
-    }
-
-    public void sortBirthday() {
-        newcontactArray = tempArray();
-        for (int i = nextIndex - 1; i > 0; i--) {
-            boolean sorted = true;
-            for (int j = 0; j < i; j++) {
-                String temp1 = newcontactArray[j].getBirthday().substring(0, 4)
-                        + newcontactArray[j].getBirthday().substring(5, 7)
-                        + newcontactArray[j].getBirthday().substring(8, 10);
-                int x1 = Integer.parseInt(temp1);
-                String temp2 = newcontactArray[j + 1].getBirthday().substring(0, 4)
-                        + newcontactArray[j + 1].getBirthday().substring(5, 7)
-                        + newcontactArray[j + 1].getBirthday().substring(8, 10);
-                int x2 = Integer.parseInt(temp2);
-                if (x1 > x2) {
-                    sorted = false;
-                    swap(newcontactArray, j, j + 1);
-                }
-            }
-            if (sorted) {
-                break;
-            }
-        }
-        listAll(newcontactArray);
-    }
-
-    public void sortName() {
-        newcontactArray = tempArray();
-        for (int i = nextIndex - 1; i > 0; i--) {
-            boolean sorted = true;
-            for (int j = 0; j < i; j++) {
-                String name1 = newcontactArray[j].getName().toLowerCase();
-                String name2 = newcontactArray[j + 1].getName().toLowerCase();
-                if (name1.compareTo(name2) > 0) {
-                    sorted = false;
-                    swap(newcontactArray, j, j + 1);
-                }
-            }
-            if (sorted) {
-                break;
-            }
-        }
-        listAll(newcontactArray);
-    }
-
-    // --------------------EXTEND ARRAYS-------------------------------
-    private void extendArrays() {
-        contact[] tempContactsArray = new contact[size + loadFact];
-
-        for (int i = 0; i < contactsArray.length; i++) {
-            tempContactsArray[i] = contactsArray[i];
-        }
-        contactsArray = tempContactsArray;
-    }
-
-    // ------------------------ADD METHOD------------------------------
-    public void add(contact contact) {
-        if (isFull()) {
-            extendArrays();
-        }
-        contactsArray[nextIndex++] = contact;
-    }
-
-    // ------------------UPDATE NAME------------------------
-    public void updateName(int index, String name) {
-        contactsArray[index].setName(name);
-    }
-
-    // ------------------UPDATE MOBILE------------------------
-    public void updateMobile(int index, String mobile) {
-        contactsArray[index].setMobile(mobile);
-    }
-
-    // ------------------UPDATE COMPANY------------------------
-    public void updateCompany(int index, String company) {
-        contactsArray[index].setCompany(company);
-        ;
-    }
-
-    // ------------------UPDATE SALARY------------------------
-    public void updateSalary(int index, int salary) {
-        contactsArray[index].setSalary(index);
-    }
-
-    public void about(int index) {
-        System.out.println("\tContact ID            :" + contactsArray[index].getId());
-        System.out.println("\tName                  :" + contactsArray[index].getName());
-        System.out.println("\tPhone Number          :" + contactsArray[index].getMobile());
-        System.out.println("\tCompany Name          :" + contactsArray[index].getCompany());
-        System.out.println("\tSalary                :" + contactsArray[index].getSalary());
-        System.out.println("\tB'Day(YYYY-MM-DD)     :" + contactsArray[index].getBirthday() + "\n");
-    }
-
-    private void listAll(contact[] temp) {
-        System.out.println(
-                "+-----------------------------------------------------------------------------------------------+");
-        System.out.println("| Contact ID\t| Name\t\t|Phone Number\t| Company\t| Salary\t| Birthday\t|");
-        System.out.println(
-                "+-----------------------------------------------------------------------------------------------+");
-        for (int i = 0; i < nextIndex; i++) {
-            System.out.printf("| %-14s| %-14s| %-14s| %-14s| %-14d| %-14s|\n", temp[i].getId(), temp[i].getName(),
-                    temp[i].getMobile(), temp[i].getCompany(), temp[i].getSalary(), temp[i].getBirthday());
-        }
-        System.out.println(
-                "+-----------------------------------------------------------------------------------------------+");
-    }
-
-    /////////////////////////////// swap
-    private void swap(contact[] ar, int index1, int index2) {
-        contact temp = ar[index1];
-        ar[index1] = ar[index2];
-        ar[index2] = temp;
-    }
-}
-
 class ifriend {
 
     ////////// global
     // public static contact[] contactArray=new contact[0];
-    public static ContactList contactList = new ContactList(100, 50);
+    // public static ContactList contactList = new ContactList(100, 50);
+    public static list contactList = new list();
 
     ////////////////////////////
 
@@ -288,12 +319,7 @@ class ifriend {
     /////////////////////////////////////////////////////////////////////
 
     public static String generateID() {
-        if (contactList.getSize() == 0) {
-            return "C0001";
-        }
-        String lastId = contactList.get(contactList.getSize() - 1).getId();
-        int lastNo = Integer.parseInt(lastId.substring(1));
-        return String.format("C%04d", lastNo + 1);
+        return contactList.generateID();
     }
 
     public static String generateMobile() {
@@ -564,7 +590,7 @@ class ifriend {
         System.out.print("Search Contact by Name or Phone Number -");
         String str = input.next();
         str = str.strip();
-        int index = contactList.searchByNameOrPhoneNumber(str);
+        int index = contactList.search(str);
         if (index == -1) {
             updateContacts();
         } else {
@@ -610,7 +636,7 @@ class ifriend {
         System.out.print("Search Contact by Name or Phone Number -");
         String str = input.next();
         str = str.strip();
-        int index = contactList.searchByNameOrPhoneNumber(str);
+        int index = contactList.search(str);
         if (index == -1) {
             updateContacts();
         } else {
@@ -620,7 +646,7 @@ class ifriend {
                 System.out.print("Do you want to delete this contact (Y/N): ");
                 char choice = input.next().charAt(0);
                 if (choice == 'Y' || choice == 'y') {
-                    contactList.delete(index);
+                    contactList.remove(index);
                     System.out.println("\n\tContact has beed deleted succesfully...");
                 } /*
                    * else{
@@ -651,7 +677,7 @@ class ifriend {
         System.out.print("Search Contact by Name or Phone Number -");
         String str = input.next();
         str = str.strip();
-        int index = contactList.searchByNameOrPhoneNumber(str);
+        int index = contactList.search(str);
         if (index == -1) {
             System.out.println("\nNo contact found for " + str + "...\n");
             System.out.print("Do you want to try a new search (Y/N):");
@@ -785,6 +811,7 @@ class ifriend {
                 break;
             case 5:
                 listContact();
+                // contactList.listAll();
                 break;
             case 6:
                 return;
